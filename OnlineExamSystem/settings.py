@@ -5,8 +5,6 @@ import os
 # BASE_DIR = Path(__file__).resolve().parent.parent  原来的代码中的配置
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # 对生产中使用的密钥保密，所有的Django实例之间都是唯一的，每个项目都是不一样的
 SECRET_KEY = 'django-insecure-(n+6loejrpl_9xt^gj6nll&yy_8tp!lh1ilillam-n9)o9#*5z'
@@ -21,8 +19,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
-
+# 应用程序的定义
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -30,7 +27,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'simpleui',  #Django admin 美化
+    'ckeditor',  # 富文本编辑器
+    'ckeditor_uploader',  # 富文本编辑器上传图片模块
+    'cms',  # 管理员
+    'front',  # 学生和老师
 ]
+
+# 媒体文件配置
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = ""
+MEDIA_ROOT = os.path.join(BASE_DIR, "")
+# 上传图片保存路径，如果没有图片存储或者使用自定义存储位置
+# 那么直接写''，如果是使用Django本身的存储方式，那么你就指明一个目录用来存储即可
+CKEDITOR_UPLOAD_PATH = 'images'
+
+# 富文本编辑器ckeditor配置
+CKEDITOR_CONFIGS = {
+    # (1)默认配置
+    # 'default': {
+    #     'toolbar': 'full',  # 工具条功能
+    #     'height': 300,  # 编辑器高度
+    #     'width': 800,  # 编辑器宽度
+    # },
+    # (2)自定义配置代码块显示
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
