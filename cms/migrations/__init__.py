@@ -3,4 +3,4 @@
 时间：2023/3/4 20:45
 作者：zx
 """
-default_app_config = 'cms.migrations.apps.CmsConfig'
+

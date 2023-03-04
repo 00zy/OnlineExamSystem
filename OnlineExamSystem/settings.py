@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
-
+import pymysql
+pymysql.install_as_MySQLdb()
 # 在项目内部构建路径
 # BASE_DIR = Path(__file__).resolve().parent.parent  原来的代码中的配置
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
     'ckeditor_uploader',  # 富文本编辑器上传图片模块
     'cms',  # 管理员
     'front',  # 学生和老师
+    # 'message'
 ]
 
 # 媒体文件配置

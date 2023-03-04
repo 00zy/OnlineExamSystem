@@ -1,25 +1,20 @@
-"""
-代码功能：操作数据表格，导出Excel、导入注册模型
-时间：2023/3/4 20:58
-作者：zx
-"""
-from openpyxl import Workbook  # 操作数据表格，导出Excel
-from django.contrib import admin  # 所用的后台管理系统的模板
-from django.http import HttpResponse  # http协议
-# 导入注册模型
+from openpyxl import Workbook
+from django.contrib import admin
+from django.http import HttpResponse
+# Register your models here.
 from .models import Student, Teacher, QuestionBank, TestPaper, Academy, Speciality, Course, Record
 
 
-# 增加导出Excel功能
+# 增加导出excel功能
 class ExportExcelMixin(object):
     def export_as_excel(self, request, queryset):
-        meta = self.model._meta  # 用于定义文件名，格式为：app名.模型类名
+        meta = self.model._meta  # 用于定义文件名, 格式为: app名.模型类名
         field_names = [field.name for field in meta.fields]  # 模型所有字段名
 
         response = HttpResponse(content_type='application/msexcel')  # 定义响应内容类型
         response['Content-Disposition'] = f'attachment; filename={meta}.xlsx'  # 定义响应数据格式
-        wb = Workbook()  # 新建一个Workbook
-        ws = wb.active  # 使用当前活动的sheet表
+        wb = Workbook()  # 新建Workbook
+        ws = wb.active  # 使用当前活动的Sheet表
         ws.append(field_names)  # 将模型字段名作为标题写入第一行
         for obj in queryset:  # 遍历选择的对象列表
             for field in field_names:
@@ -29,7 +24,7 @@ class ExportExcelMixin(object):
         wb.save(response)  # 将数据存入响应内容
         return response
 
-    export_as_excel.short_description = '导出到Excel'  # 通过wb把他生成为一个Excel表格
+    export_as_excel.short_description = '导出到Excel'
 
 
 # 学院信息
@@ -67,7 +62,7 @@ class StudentAdmin(admin.ModelAdmin, ExportExcelMixin):
     ordering = ("sid",)
     # 分页
     list_per_page = 10
-    actions = ["export_as_excel", ]  # 排序功能，导入到Excel
+    actions = ["export_as_excel", ]
 
 
 # 教师表
@@ -135,7 +130,7 @@ class RecordAdmin(admin.ModelAdmin, ExportExcelMixin):
 
 
 # 站点名称
-admin.site.site_header = '基于Django和遗传算法的智能组卷在线考试系统'
+admin.site.site_header = 'Django在线考试系统'
 
 # 网页标题
 admin.site.site_title = '在线考试后台管理系统'
