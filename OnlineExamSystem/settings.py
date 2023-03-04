@@ -52,8 +52,37 @@ CKEDITOR_CONFIGS = {
     #     'width': 800,  # 编辑器宽度
     # },
     # (2)自定义配置代码块显示
+    'default': {
+        'toolbar': (
+            ['div', 'Source', '-', 'Save', 'NewPage', 'Preview', '-', 'Templates'],
+            ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker', 'Scayt'],
+            ['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
+            ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField'],
+            ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+            ['Link', 'Unlink', 'Anchor'],
+            ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak'],
+            ['Styles', 'Format', 'Font', 'FontSize'],
+            ['TextColor', 'BGColor'],
+            ['Maximize', 'ShowBlocks', '-', 'About', 'pbckcode'],
+            ['Blockquote', 'CodeSnippet'],
+        ),
+        # 宽度自适应
+        'width': 'auto',
+        # 添加按钮在这里
+        'toolbar_Custom': [
+            ['NumberedList', 'BulletedList'],
+            ['Blockquote', 'CodeSnippet'],
+        ],
+        # 加入代码块插件
+        'extraPlugins': ','.join(['codesnippet', 'widget', 'lineutils', ]),
+    },
 }
 
+# 中间件：用户发出的请求在系统中都会从中间件运行一遍。
+# 也可以自定义一些中间件（自定义某些功能），比如说用户发出的请求经过一些处理后再传给服务器。
+# 或者是响应用户的一些请求，交给服务器传来的数据经过一些处理后再传给用户。
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,13 +93,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# 根URL配置 主路由
 ROOT_URLCONF = 'OnlineExamSystem.urls'
 
 # 模板 前端页面
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [os.path.join(BASE_DIR, 'reception/templates')]  # 用DIRS告诉整个项目的前端页面放在哪里。
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -80,16 +110,18 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'builtins': [
+                'django.templatetags.static'  # 在模板中使用load标签加载static 标签。
+            ]  # 不想每次在模板中加载静态文件都使用load加载static标签.
         },
     },
 ]
 
+# WSGI_应用程序  http底层封装的一个协议。
 WSGI_APPLICATION = 'OnlineExamSystem.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+# 数据库配置、连接.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -102,9 +134,7 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
-
+# 密码验证
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -121,24 +151,33 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+# 国际化配置
+LANGUAGE_CODE = 'zh-hans'
+# 遵循亚洲上海的时间 当前时间
+TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
-
+USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
+# 静态文件地址
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'reception', 'front')  # css和js存放的一个路径
+]
 
-STATIC_URL = 'static/'
+# 发送邮件
+# EMAIL_BACKEND = 'django.core.mail.backends.smpt.EmailBackend'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+# 采用安全链接
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_PORT = 25
+# 发送邮箱的邮件
+EMAIL_HOST_USER = '1605482347@qq.com'
+# 授权码
+EMAIL_HOST_PASSWORD = 'mplbgoywhpezibia'
+# 收件人看到的发件人
+EMAIL_FROM = '1605482347@qq.com'
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
