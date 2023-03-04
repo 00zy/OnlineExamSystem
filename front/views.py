@@ -51,11 +51,11 @@ def teacherLogin(request):
             return render(request, 'stu/index.html', {'message': '账号或密码不正确'})
         if password == teacher.pwd:  # 登录成功
             # 保存老师的信息到session
-            tea = models.Teacher.objects.filter(tid=tid).values('tid').first()
+            tea = models.Teacher.objects.filter(tid=tid).values('tid').first()  # first()是查询数据库中满足条件的第一个
             request.session['tea'] = tea
             # 实现试卷统计功能
             # 在试卷列表中找到该老师发布的试题
-            paper = models.TestPaper.objects.filter(tid=teacher.tid).all()
+            paper = models.TestPaper.objects.filter(tid=teacher.tid).all()  # .all()是在数据库中查询所有满足tid=teacher.tid的行数。
             return render(request, 'tea/teacher.html', {'teacher': teacher, 'paper': paper})
         else:
             return render(request, 'stu/index.html', {'message': '密码不正确'})
@@ -121,7 +121,7 @@ def calculateGrade(request):
         subject1 = request.POST.get('subject')
         student = models.Student.objects.get(sid=sid)
         paper = models.TestPaper.objects.filter(zhuanye=student.major)
-        course = models.Course.objects.filter(course_name=subject1).first()
+        course = models.Course.objects.filter(course_name=subject1).first()  # filter和get的功能一样，但是filter的后缀多。
         # print(course.id)
         # 计算考试成绩
         questions = models.TestPaper.objects. \
