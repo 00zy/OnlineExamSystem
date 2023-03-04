@@ -1,7 +1,7 @@
 """
-代码功能：
-时间：
-作者：
+代码功能：路由，访问的一个路径
+时间：2023/3/3 22:25
+作者：zx
 """
 from django.urls import path
 from . import views
