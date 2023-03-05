@@ -8,6 +8,6 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^ckeditor/', include('ckeditor_uploader.urls')),
-    path('', include('front.urls')),
+    path('', include('front.urls')),  # 后面的是子路由
     # 没有这一句无法显示上传的图片
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
