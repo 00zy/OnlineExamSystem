@@ -1,7 +1,7 @@
 from openpyxl import Workbook
 from django.contrib import admin
 from django.http import HttpResponse
-# Register your models here.
+# Register your models here. 下面是要注册的类
 from .models import Student, Teacher, QuestionBank, TestPaper, Academy, Speciality, Course, Record
 
 

@@ -151,7 +151,6 @@ class Record(models.Model):
     def __str__(self):
         return '<%s:%s>' % (self.xuehao, self.grade)
 
-
 # 更行数据库命令（在项目终端目录下）
 # python manage.py makemigrations
 # python manage.py migrate
