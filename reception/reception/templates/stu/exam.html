@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>在线答题考试系统</title>
+
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'js/jquery.countdown.js' %}"></script>
+    <!--时间js-->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet" type="text/css" />
+
+    <link href="{% static 'css/test.css' %}" rel="stylesheet" type="text/css" />
+
+
+</head>
+<body>
+<div class="main">
+	<div class="test_main">
+		<div class="nr_left">
+			<div class="test">
+            <nav class="navbar navbar-expand-sm bg-light navbar-light ">
+                <ul class="navbar-nav">
+                    <li class="nav-item active" style="text-align: center">
+                        <a class="nav-link"><h3>当前科目:{{ subject }}</h3></a>
+                    </li>
+                    <li style="right: 140px; font-size: 30px;color: #000000;margin-left: 60px;margin-top: 15px">&nbsp;&nbsp;&nbsp;{{ title }}</li>
+                    <li style="position:absolute;font-size: 30px;color: #9fcdff;margin-left: 80%;margin-top: 2%">{{ student.name }}</li>
+                </ul>
+            </nav>
+				<form action="{% url 'front:calculateGrade' %}" method="post">
+                <input type="hidden" name="sid" value="{{ student.sid }}">
+                {# 获取当前考试科目#}
+                <input type="hidden" name="subject" value="{{ subject }}">
+					<div class="test_title">
+						<font><input class="tijiao" type="submit" name="tijiao" value="交卷" style="text-align: center"></font>
+					</div>
+						<div class="test_content">
+							<div class="test_content_title">
+								<h2>单选题</h2>
+                                <div id="timer" style="color:red"></div>
+							</div>
+						</div>
+						<div class="test_content_nr">
+							<ul>
+                                {% for paper1 in paper %}
+                                   {% for test in paper1.pid.all %}
+                                       <li id="{{ forloop.counter }}">
+                                        <div class="test_content_nr_tt">
+											<i>{{ forloop.counter}}</i><span>({{ test.score }}分)</span>
+                                            <font>{{ test.title | safe}}</font>
+
+										</div>
+                                       <div class="test_content_nr_main">
+											<ul>
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}"
+                                                            value="A"/>
+														<label>A.
+                                                            <p class="ue" style="display: inline;">{{ test.a }}</p>
+														</label>
+													</li>
+
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}"
+                                                            value="B"/>
+														<label>
+															B.<p class="ue" style="display: inline;">{{ test.b }}</p>
+														</label>
+													</li>
+
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}"
+                                                            value="C"/>
+														<label>
+															C.<p class="ue" style="display: inline;">{{ test.c }}</p>
+														</label>
+													</li>
+
+													<li class="option">
+															<input type="radio" class="radioOrCheck" name="{{ test.id }}"
+                                                            value="D"/>
+														<label>
+															D.<p class="ue" style="display: inline;">{{ test.d }}</p>
+														</label>
+													</li>
+											</ul>
+										</div>
+                                        </li>
+                                   {% endfor %}
+                                {% endfor %}
+							</ul>
+						</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+	<!--nr end-->
+	<div class="foot"></div>
+</div>
+<SCRIPT type="text/javascript">
+            var maxtime = {{ exam_time }}; //一个小时，按秒计算，自己调整!
+            $(function () {
+                timer = setInterval("CountDown()", 1000);
+            })
+                function CountDown() {
+                    if (maxtime >= 0) {
+                        minutes = Math.floor(maxtime / 60);
+                        seconds = Math.floor(maxtime % 60);
+                        msg = "距离考试结束还有" + minutes + "分" + seconds + "秒";
+                        {#document.all["timer"].innerHTML = msg;#}
+                        document.getElementById('timer').innerHTML = msg;
+                        if (maxtime == 5 * 60)alert("还剩5分钟");
+                            --maxtime;
+                    } else{
+                        {#clearInterval(timer);#}
+                        {#alert("时间到，结束!");#}
+                        document.getElementsByClassName('tijiao').click();
+                    }
+                }
+
+</SCRIPT>
+<div id="warring" style="color:red"></div>
+</body>
+</html>
+

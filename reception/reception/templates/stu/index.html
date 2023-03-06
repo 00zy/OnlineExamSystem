@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon"
+          href="https://edu-image.nosdn.127.net/32a8dd2a-b9aa-4ec9-abd5-66cd8751befb.png?imageView&quality=100">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static 'bootstrap-4.3.1-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- 必须在引入bootstarp.js之前引入 -->
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+
+    <script src="{% static 'bootstrap-4.3.1-dist/js/bootstrap.min.js' %}"></script>
+
+    <title>首页</title>
+
+</head>
+<body>
+
+
+<div class="container">
+<nav class="navbar navbar-expand-sm bg-light navbar-light ">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="/"><h3>欢迎来到，Django在线考试系统！</h3></a>
+        </li>
+    </ul>
+    <ul class="navbar-nav center">
+        <li style="left: 20px">
+            <button data-target="#stuModal" data-toggle="modal" class="btn btn-primary">学生登陆</button>
+        </li>
+        &nbsp;&nbsp;&nbsp;
+        <li style="left: 100px">
+            <button data-target="#teaModal" data-toggle="modal" class="btn btn-primary">教师登陆</button>
+        </li>
+        &nbsp;&nbsp;&nbsp;
+        <li class="nav-item">
+            <a class="nav-link" href="/admin">管理员登录</a>
+        </li>
+
+        <li style="position:absolute;right:10%;font-size: 35px;color: orange">{{ message }}{{ student.name }}</li>
+
+        <li style="position:absolute;right:3%;top:25%">
+             <a href="{% url 'front:stulogout' %}"><button data-target="#myModal" data-toggle="modal" class="btn btn-primary">退出</button></a>
+        </li>
+    </ul>
+</nav>
+
+    <br>
+    <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="pill" href="#home">个人信息</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#menu1">考试信息</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#menu2">成绩查询</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="home" class="container tab-pane active"><br>
+            <h3>登录确认个人信息</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>项目</th>
+                    <th class="left">个人信息</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="table-success">
+                    <td>学号</td>
+                    <td>{{ student.sid }}</td>
+                </tr>
+                <tr class="table-primary">
+                    <td>姓名</td>
+                    <td>{{ student.name }}</td>
+                </tr>
+                <tr class="table-success">
+                    <td>性别</td>
+                    {% if student.sex == 1 %}
+                        <td>男</td>
+                    {% elif student.sex == 0 %}
+                        <td>女</td>
+                    {% else %}
+                        <td> </td>
+                    {% endif %}
+                </tr>
+
+                </tr>
+                <tr class="table-active">
+                    <td>年龄</td>
+                    <td>{{ student.age }}</td>
+                </tr>
+
+                <tr class="table-danger">
+                    <td>学院</td>
+                    <td>{{ student.xueyuan.name }}</td>
+                </tr>
+
+                <tr class="table-success">
+                    <td>专业</td>
+                    <td>{{ student.major.zhuanye }}</td>
+                </tr>
+
+                <tr class="table-warning">
+                    <td>邮箱地址</td>
+                    <td>{{ student.email }}</td>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="menu1" class="container tab-pane fade"><br>
+            <h3>考试信息</h3>
+            <p></p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>学号</th>
+                    <th>姓名</th>
+                    <th>试题</th>
+                    <th>考试科目</th>
+                    <th>考试时间</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                {#   遍历字典  paper #}
+                {% for paper1 in paper %}
+                    <tr class="table-info">
+                        <td>{{ student.sid }}</td>
+                        <td>{{ student.name }}</td>
+                        <td>{{ paper1.title }}</td>
+                        <td>{{ paper1.course.course_name }}</td>
+                        <td>{{ paper1.examtime }}</td>
+                        <td>
+                            <a href="{% url 'front:startExam' %}?sid={{ student.sid }}&title={{ paper1.title }}&subject={{ paper1.course.course_name }}">
+                                <button class="btn btn-primary startTest" id="toExam+{{ paper1.course.course_name }}">开始考试</button>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div id="menu2" class="container tab-pane fade"><br>
+            <h3>考试成绩</h3>
+            <p></p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>科目</th>
+                    <th>成绩</th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for grade1 in grade %}
+                    <tr class="table-primary">
+                        <td>{{ grade1.xuehao }}</td>
+                        <td>{{ grade1.course }}</td>
+                        <td>{{ grade1.grade }}</td>
+
+                    </tr>
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{#学生登录的模态对话框#}
+<div class="modal fade" tabindex="-1" role="dialog" id="stuModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">学生登陆</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <form class="form-horizontal" action="{% url 'front:studentLogin' %}" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">学生学号</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="id" placeholder="输入学号">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addr" class="col-sm-3 control-label">密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" name="password" placeholder="输入密码">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">登陆</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+{#老师登录的模态对话框#}
+<div class="modal fade" tabindex="-1" role="dialog" id="teaModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">教师登陆</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="form-horizontal" action="{% url 'front:teacherLogin' %}" method="post">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-3 control-label">教师工号</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="id" placeholder="输入学号">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addr" class="col-sm-3 control-label">密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" name="password" placeholder="输入密码" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary">登陆</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+
+<script>
+    $("#toExam+{{ paper1.course }}").click(function () {
+
+    });
+
+    var startTest = document.getElementsByClassName('startTest')
+    // console.log(startTest[0])
+    startTest[0].onclick = function () {
+        // startTest[0].style.display = 'none'
+        // startTest[0].remove()
+        // var newDiv = document.createElement('button')
+        // console.log(newDiv)
+        startTest[0].innerHTML = '已开始'
+        window.history.back()
+
+    }
+
+</script>
+</html>

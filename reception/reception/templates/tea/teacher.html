@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="icon" href="https://edu-image.nosdn.127.net/32a8dd2a-b9aa-4ec9-abd5-66cd8751befb.png?imageView&quality=100">
+    <link href="{% static 'bootstrap-4.3.1-dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- 必须在引入bootstarp.js之前引入 -->
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap-4.3.1-dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/echarts.min.js' %}"></script>
+    <title>Django在线开始系统-教师端</title>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-sm bg-light navbar-light ">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link"><h3>Django在线考试系统-教师端</h3></a>
+                </li>
+                <li style="position:absolute;right:10%;font-size: 35px;color: orange">{{ message }}{{ teacher.name }},您好！</li>
+                <li style="position:absolute;right:3%;top:25%">
+                    <a href="{% url 'front:tealogout' %}"><button data-target="#myModal" data-toggle="modal" class="btn btn-primary">退出</button></a>
+                </li>
+            </ul>
+        </nav>
+        <br>
+
+      <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="pill" href="#home">个人信息</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="pill" href="#menu1">成绩统计</a>
+        </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/cms/testpaper/add/">组卷</a>
+            </li>
+      </ul>
+
+      <div class="tab-content">
+            <div id="home" class="container tab-pane active"><br>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>属性</th>
+                            <th>信息</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>教工号</td>
+                            <td>{{ teacher.tid }}</td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td>姓名</td>
+                            <td>{{ teacher.name }}</td>
+                        </tr>
+                        <tr class="table-success">
+                            <td>性别</td>
+                            {% if teacher.sex %}
+                                <td>男</td>
+                            {% else %}
+                                <td>女</td>
+                            {% endif %}
+                        </tr>
+                          <tr class="table-danger">
+                                <td>学院</td>
+                                <td>{{ teacher.xueyuan }}</td>
+                          </tr>
+                          <tr class="table-warning">
+                                <td>邮箱地址</td>
+                                <td>{{ teacher.email }}</td>
+                          </tr>
+                    </tbody>
+                </table>
+            </div>
+        <div id="menu1" class="container tab-pane fade"><br>
+            <h3>成绩统计</h3>
+            <br/>
+            <table class="table">
+            <thead>
+                <tr>
+                    <th>发布教师</th>
+                    <th>考试科目</th>
+                    <th>考试名称</th>
+                    <th>考试时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {#   遍历paper #}
+                {% for paper1 in paper %}
+                    <tr class="table-info">
+                        <td>{{ teacher.name }}</td>
+                        <td>{{ paper1.course }}</td>
+                        <td>{{ paper1.title }}</td>
+                        <td>{{ paper1.examtime }}</td>
+                        <td><a href="/showGrade/?subject={{ paper1.course }}">
+                            <button type="button" class="btn btn-primary"
+                            data-toggle="collapse" data-target="#demo">查看学生成绩</button></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+                {% for i in list1 %}
+                    {{ i.data1 }}
+                {% endfor %}
+
+    <div id="main" style="width: 800px;height:500px;"></div>
+
+</div>
+
+        <div id="menu2" class="container tab-pane fade"><br>
+        <h3>考试成绩</h3>
+
+{#        form表单#}
+{#      <div class="container">#}
+{#          <form action="{% url 'front:findStudent' %}" method="get">#}
+{#              <input type="hidden" name="tid" value="{{ teacher.tid }}">#}
+{#              <div class="row">#}
+{#                  <div class="col-sm-2">#}
+{#                      <div class="form-group">#}
+{#                          <label>学号</label>#}
+{#                          <input type="text" name="id" class="form-control" placeholder="请输入学号">#}
+{#                      </div>#}
+{#                  </div>#}
+{##}
+{#                  <div class="col-sm-2 offset-1">#}
+{#                      <label for="">性别</label>#}
+{##}
+{#                      <div class="radio">#}
+{#                          使用单选框的checked属性，默认 全部 单选按钮被选中#}
+{#                            <label><input type="radio" name="sex" value="" checked>全部</label>#}
+{#                        </div>#}
+{#                      <div class="radio">#}
+{#                            <label><input type="radio" name="sex" value="男" >男</label>#}
+{#                        </div>#}
+{#                        <div class="radio">#}
+{#                          <label><input type="radio" name="sex" value="女">女</label>#}
+{#                        </div>#}
+{#                  </div>#}
+{#                  <div class="col-sm-2 offset-1">#}
+{#                      <label for="">科目</label>#}
+{#                      <input type="text" name="subject" placeholder="输入科目名称">#}
+{#                  </div>#}
+{##}
+{#                  <div class="col-sm-2 offset-2">#}
+{#                      <button class="btn btn-success" type="submit">查询</button>#}
+{#                  </div>#}
+{#              </div>#}
+{#          </form>#}
+{#      </div>#}
+{##}
+{#    搜到的学生信息#}
+{#        <div class="container">#}
+{#            <table class="table">#}
+{#                <thead>#}
+{#                  <tr>#}
+{#                      <th>学号</th>#}
+{#                    <th>姓名</th>#}
+{#                      <th>专业</th>#}
+{#                    <th>科目</th>#}
+{#                    <th>成绩</th>#}
+{#                  </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{##}
+{#                {% for result1 in result %}#}
+{#                <tr class="table-primary">#}
+{#                    <td>{{ result1.id }}</td>#}
+{#                    <td>{{ result1.name }}</td>#}
+{#                    <td>{{ result1.major }}</td>#}
+{#                    <td>{{ result1.subject }}</td>#}
+{#                    <td>{{ result1.grade }}</td>#}
+{#                </tr>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#            </table>#}
+{#        </div>#}
+{#    </div>#}
+
+    <div id="menu3" class="container tab-pane fade"><br>
+      <h3>题库</h3>
+      <p>题库</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

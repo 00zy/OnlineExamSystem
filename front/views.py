@@ -17,17 +17,16 @@ def studentLogin(request):
         print("id", sid, "password", password)
         # 通过学号获取该学生实体
         try:
-            student = models.Student.objects.get(sid=sid)  # 从models类中找到Student类直接objects(操作)get获得sid
-            #    select * form where
+            student = models.Student.objects.get(sid=sid)
         except:
             return render(request, 'stu/index.html', {'message': '账号或密码不正确'})
 
         if password == student.pwd:  # 登录成功
             # 查询考试信息
-            paper = models.TestPaper.objects.filter(zhuanye=student.major)  # filter相当于过滤器类似于where
+            paper = models.TestPaper.objects.filter(zhuanye=student.major)
             # 查询成绩信息
             grade = models.Record.objects.filter(xuehao=student.sid)
-            # 渲染index模板，将数据传送到前端页面
+            # 渲染index模板
             return render(request, 'stu/index.html', {'student': student, 'paper': paper, 'grade': grade})
         else:
             return render(request, 'stu/index.html', {'message': '密码不正确'})
@@ -112,7 +111,7 @@ def calculateGrade(request):
         subject1 = request.POST.get('subject')
         student = models.Student.objects.get(sid=sid)
         paper = models.TestPaper.objects.filter(zhuanye=student.major)
-        course = models.Course.objects.filter(course_name=subject1).first()  # 找到符合条件的第一行
+        course = models.Course.objects.filter(course_name=subject1).first()
         print(course.id)
         # 计算考试成绩
         questions = models.TestPaper.objects. \
